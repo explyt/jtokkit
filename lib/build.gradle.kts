@@ -4,8 +4,8 @@ plugins {
     signing
 }
 
-group = "com.knuddels"
-version = "1.1.0-SNAPSHOT"
+group = "net.optionfactory"
+version = "1.1.1"
 
 repositories {
     mavenCentral()
@@ -34,8 +34,8 @@ tasks.getByName<Test>("test") {
 publishing {
     repositories {
         maven {
-            val snapshotRepoUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots"
-            val releaseRepoUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2"
+            val snapshotRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+            val releaseRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
 
             name = "mavenCentral"
             url = uri(if (version.toString().endsWith("SNAPSHOT")) snapshotRepoUrl else releaseRepoUrl)
@@ -80,10 +80,6 @@ publishing {
         }
     }
 }
-
 signing {
-    val signingKey: String? by project
-    val signingPassword: String? by project
-    useInMemoryPgpKeys(signingKey, signingPassword)
     sign(publishing.publications["mavenJava"])
 }
