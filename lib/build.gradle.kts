@@ -1,3 +1,5 @@
+import java.net.URI
+
 plugins {
     `java-library`
     `maven-publish`
@@ -5,7 +7,7 @@ plugins {
 }
 
 group = "com.knuddels"
-version = "1.1.0-SNAPSHOT"
+version = System.getenv("EXPLYT_JTOKKIT_VERSION") ?: "local-1.0.0"
 
 repositories {
     mavenCentral()
@@ -34,12 +36,12 @@ tasks.getByName<Test>("test") {
 publishing {
     repositories {
         maven {
-            val snapshotRepoUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots"
-            val releaseRepoUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2"
-
-            name = "mavenCentral"
-            url = uri(if (version.toString().endsWith("SNAPSHOT")) snapshotRepoUrl else releaseRepoUrl)
-            credentials(PasswordCredentials::class)
+            name = "GitHubPackages"
+            url = URI("https://maven.pkg.github.com/explyt/jtokkit")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
         }
     }
 
@@ -79,11 +81,4 @@ publishing {
             }
         }
     }
-}
-
-signing {
-    val signingKey: String? by project
-    val signingPassword: String? by project
-    useInMemoryPgpKeys(signingKey, signingPassword)
-    sign(publishing.publications["mavenJava"])
 }
